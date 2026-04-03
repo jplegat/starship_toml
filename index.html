@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Starship Prompt — Setup Guide</title>
+  <style>
+    /* ═══════════════════════════════════════════════════
+       MIDNIGHT PURPLE — FORCED DARK
+       ═══════════════════════════════════════════════════ */
+    :root {
+      --bg-primary:    #1A1625;
+      --bg-secondary:  #261F36;
+      --bg-tertiary:   #332A47;
+      --bg-gradient:   linear-gradient(135deg, #120F1A 0%, #1A1625 50%, #261F36 100%);
+      --bg-code:       #0E0B18;
+
+      --text-primary:  #F5F3F7;
+      --text-secondary:#B8AED0;
+      --text-tertiary: #8678A0;
+
+      --card-bg:       #261F36;
+      --card-border:   #3D3356;
+      --card-shadow:   rgba(0,0,0,0.35);
+
+      --accent-primary:      #A78BFA;
+      --accent-primary-light:rgba(167,139,250,0.18);
+      --accent-secondary:    #C084FC;
+      --accent-gold:         #FBBF24;
+      --accent-gold-light:   rgba(251,191,36,0.15);
+      --accent-teal:         #34D399;
+      --accent-teal-light:   rgba(52,211,153,0.15);
+
+      --status-success:     #34D399;
+      --status-success-bg:  rgba(52,211,153,0.15);
+      --status-warning:     #FBBF24;
+      --status-warning-bg:  rgba(251,191,36,0.15);
+      --status-error:       #F87171;
+      --status-error-bg:    rgba(248,113,113,0.15);
+
+      --font-text:    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+      --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      --font-mono:    'SF Mono', SFMono-Regular, ui-monospace, Menlo, 'Cascadia Code', monospace;
+
+      --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+      --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-12: 48px;
+      --space-16: 64px;
+
+      --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px; --radius-xl: 16px;
+
+      --transition: 150ms ease-out;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       BASE
+       ═══════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-text);
+      font-size: 16px;
+      line-height: 1.6;
+      letter-spacing: -0.011em;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       LAYOUT
+       ═══════════════════════════════════════════════════ */
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+    }
+
+    /* ═══════════════════════════════════════════════════
+       HEADER / NAV
+       ═══════════════════════════════════════════════════ */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(26,22,37,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .site-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+
+    .site-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .site-logo .logo-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--accent-primary);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+    }
+
+    .site-nav {
+      display: flex;
+      gap: var(--space-6);
+    }
+
+    .site-nav a {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    .site-nav a:hover { color: var(--text-primary); }
+
+    /* ═══════════════════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════════════════ */
+    .hero {
+      padding: var(--space-16) 0 var(--space-12);
+      background: var(--bg-gradient);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 0%, rgba(167,139,250,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(192,132,252,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--accent-primary-light);
+      border: 1px solid rgba(167,139,250,0.3);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent-primary);
+      margin-bottom: var(--space-6);
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 6vw, 56px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin-bottom: var(--space-4);
+      background: linear-gradient(135deg, #F5F3F7 30%, #A78BFA 70%, #C084FC 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 52ch;
+      margin: 0 auto var(--space-8);
+      line-height: 1.5;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: var(--space-3);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-family: var(--font-text);
+      font-size: 15px;
+      font-weight: 500;
+      padding: 10px 22px;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all var(--transition);
+    }
+
+    .btn-primary {
+      background: var(--accent-primary);
+      color: #120F1A;
+    }
+
+    .btn-primary:hover { filter: brightness(1.1); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--card-border);
+    }
+
+    .btn-outline:hover { background: var(--bg-secondary); }
+
+    /* ═══════════════════════════════════════════════════
+       FEATURE PILLS
+       ═══════════════════════════════════════════════════ */
+    .features-bar {
+      padding: var(--space-8) 0;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .features-bar .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      justify-content: center;
+    }
+
+    .feature-pill {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .feature-pill .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      flex-shrink: 0;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       MAIN CONTENT
+       ═══════════════════════════════════════════════════ */
+    .content {
+      padding: var(--space-12) 0 var(--space-16);
+    }
+
+    /* Section heading */
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      margin-bottom: var(--space-3);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-3);
+    }
+
+    .section-desc {
+      color: var(--text-secondary);
+      max-width: 60ch;
+      margin-bottom: var(--space-8);
+    }
+
+    /* ═══════════════════════════════════════════════════
+       STEPS
+       ═══════════════════════════════════════════════════ */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      margin-bottom: var(--space-12);
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: var(--space-4);
+      align-items: start;
+    }
+
+    .step-number {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-lg);
+      background: var(--accent-primary-light);
+      border: 1px solid rgba(167,139,250,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent-primary);
+      flex-shrink: 0;
+    }
+
+    .step-body {
+      padding-top: 10px;
+    }
+
+    .step-body h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    .step-body p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-3);
+      max-width: 65ch;
+    }
+
+    .step-connector {
+      width: 48px;
+      display: flex;
+      justify-content: center;
+      padding: var(--space-1) 0;
+    }
+
+    .step-connector-line {
+      width: 1px;
+      height: var(--space-4);
+      background: var(--card-border);
+    }
+
+    /* ═══════════════════════════════════════════════════
+       CODE BLOCKS
+       ═══════════════════════════════════════════════════ */
+    .code-block {
+      background: var(--bg-code);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-top: var(--space-3);
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px var(--space-4);
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .code-lang {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .copy-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-tertiary);
+      font-size: 12px;
+      font-family: var(--font-text);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .copy-btn:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .copy-btn.copied {
+      color: var(--status-success);
+      border-color: var(--status-success);
+    }
+
+    .code-block pre {
+      padding: var(--space-4);
+      overflow-x: auto;
+    }
+
+    .code-block code {
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: var(--text-primary);
+      display: block;
+    }
+
+    /* Syntax tints */
+    .c-comment { color: #6B5A8A; }
+    .c-cmd     { color: #A78BFA; }
+    .c-flag    { color: #C084FC; }
+    .c-str     { color: #34D399; }
+    .c-key     { color: #FBBF24; }
+    .c-val     { color: #F9A8D4; }
+    .c-dim     { color: #6B5A8A; }
+
+    /* ═══════════════════════════════════════════════════
+       NOTE / WARNING CALLOUTS
+       ═══════════════════════════════════════════════════ */
+    .callout {
+      display: flex;
+      gap: var(--space-3);
+      padding: var(--space-4);
+      border-radius: var(--radius-md);
+      margin-top: var(--space-3);
+      font-size: 14px;
+    }
+
+    .callout-info {
+      background: var(--accent-primary-light);
+      border: 1px solid rgba(167,139,250,0.2);
+      color: var(--text-secondary);
+    }
+
+    .callout-warning {
+      background: var(--status-warning-bg);
+      border: 1px solid rgba(251,191,36,0.2);
+      color: var(--text-secondary);
+    }
+
+    .callout-icon { flex-shrink: 0; font-size: 16px; line-height: 1.4; }
+
+    /* ═══════════════════════════════════════════════════
+       CONFIG SECTION
+       ═══════════════════════════════════════════════════ */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: var(--space-3);
+      margin-bottom: var(--space-8);
+    }
+
+    .module-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      transition: border-color var(--transition);
+    }
+
+    .module-card:hover {
+      border-color: rgba(167,139,250,0.4);
+    }
+
+    .module-icon {
+      font-size: 22px;
+      margin-bottom: var(--space-2);
+    }
+
+    .module-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .module-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       DIVIDER
+       ═══════════════════════════════════════════════════ */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--card-border);
+      margin: var(--space-12) 0;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════ */
+    .site-footer {
+      border-top: 1px solid var(--card-border);
+      padding: var(--space-8) 0;
+    }
+
+    .site-footer .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+    }
+
+    .site-footer p {
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: var(--space-6);
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    .footer-links a:hover { color: var(--text-primary); }
+
+    /* ═══════════════════════════════════════════════════
+       REDUCED MOTION
+       ═══════════════════════════════════════════════════ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════════════ */
+    @media (max-width: 600px) {
+      .site-nav { display: none; }
+      .hero { padding: var(--space-12) 0 var(--space-8); }
+      .step { grid-template-columns: 36px 1fr; }
+      .step-number { width: 36px; height: 36px; font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════ HEADER ══════════════════ -->
+  <header class="site-header">
+    <div class="container">
+      <a href="#" class="site-logo">
+        <span class="logo-icon">🚀</span>
+        Starship Setup
+      </a>
+      <nav class="site-nav">
+        <a href="#steps">Steps</a>
+        <a href="#config">Configuration</a>
+        <a href="#modules">Modules</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ══════════════════ HERO ══════════════════ -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">🐚 Shell Environment · Raspberry Pi / RISC-V / Debian</div>
+      <h1>Beautiful prompts.<br>Zero compromise.</h1>
+      <p class="hero-subtitle">
+        A fully automated setup that replaces Oh My Zsh with
+        <strong style="color:var(--accent-primary)">Starship</strong> — a fast, minimal,
+        infinitely customisable prompt built for every shell.
+      </p>
+      <div class="hero-actions">
+        <a href="#steps" class="btn btn-primary">Get Started</a>
+        <a href="#config" class="btn btn-outline">View Config</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ FEATURE PILLS ══════════════════ -->
+  <div class="features-bar">
+    <div class="container">
+      <span class="feature-pill"><span class="dot"></span>Local IP display</span>
+      <span class="feature-pill"><span class="dot"></span>Memory usage</span>
+      <span class="feature-pill"><span class="dot"></span>Rich git status</span>
+      <span class="feature-pill"><span class="dot"></span>System uptime</span>
+      <span class="feature-pill"><span class="dot"></span>CPU temperature</span>
+      <span class="feature-pill"><span class="dot"></span>Automatic dark theme</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════ MAIN CONTENT ══════════════════ -->
+  <main class="content">
+    <div class="container">
+
+      <!-- STEPS -->
+      <section id="steps">
+        <p class="section-label">Installation</p>
+        <h2 class="section-title">Five steps to a better prompt</h2>
+        <p class="section-desc">
+          Run <code style="font-family:var(--font-mono);font-size:14px;color:var(--accent-primary)">sudo bash setup.sh</code>
+          to automate everything below — or follow the steps manually.
+        </p>
+
+        <div class="steps">
+
+          <!-- Step 1 -->
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-body">
+              <h3>Uninstall Oh My Zsh</h3>
+              <p>Removes the Oh My Zsh framework and its folder if present. Safe to skip if it was never installed.</p>
+              <div class="code-block">
+                <div class="code-header">
+                  <span class="code-lang">bash</span>
+                  <button class="copy-btn" onclick="copyCode(this)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                    Copy
+                  </button>
+                </div>
+                <pre><code><span class="c-comment"># Run the built-in uninstaller if it exists</span>
+<span class="c-cmd">sh</span> ~/.oh-my-zsh/tools/uninstall.sh
+<span class="c-cmd">rm</span> <span class="c-flag">-rf</span> ~/.oh-my-zsh</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-connector"><div class="step-connector-line"></div></div>
+
+          <!-- Step 2 -->
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-body">
+              <h3>Set default shell to zsh</h3>
+              <p>Makes zsh your login shell so the Starship initialisation in <code style="font-family:var(--font-mono);font-size:13px">.zshrc</code> is picked up on every new terminal.</p>
+              <div class="code-block">
+                <div class="code-header">
+                  <span class="code-lang">bash</span>
+                  <button class="copy-btn" onclick="copyCode(this)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                    Copy
+                  </button>
+                </div>
+                <pre><code><span class="c-cmd">chsh</span> <span class="c-flag">-s</span> /usr/bin/zsh</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-connector"><div class="step-connector-line"></div></div>
+
+          <!-- Step 3 -->
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-body">
+              <h3>Install Starship</h3>
+              <p>Installs the Starship binary from the Debian/Ubuntu package repository. Already installed? This is a no-op.</p>
+              <div class="code-block">
+                <div class="code-header">
+                  <span class="code-lang">bash</span>
+                  <button class="copy-btn" onclick="copyCode(this)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                    Copy
+                  </button>
+                </div>
+                <pre><code><span class="c-cmd">sudo apt install</span> <span class="c-flag">-y</span> starship</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-connector"><div class="step-connector-line"></div></div>
+
+          <!-- Step 4 -->
+          <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-body">
+              <h3>Create <code style="font-family:var(--font-mono);font-size:15px">~/.zshrc</code></h3>
+              <p>
+                Sets up aliases, launches <code style="font-family:var(--font-mono);font-size:13px">fastfetch</code> on every new shell, and
+                initialises Starship. The old <code style="font-family:var(--font-mono);font-size:13px">.zshrc</code> is backed up to
+                <code style="font-family:var(--font-mono);font-size:13px">.zshrc.bak</code>.
+              </p>
+              <div class="code-block">
+                <div class="code-header">
+                  <span class="code-lang">zsh</span>
+                  <button class="copy-btn" onclick="copyCode(this)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                    Copy
+                  </button>
+                </div>
+                <pre><code><span class="c-comment"># CPU temperature (Raspberry Pi)</span>
+<span class="c-key">alias</span> <span class="c-val">temp</span>=<span class="c-str">"echo \$((\`cat /sys/class/thermal/thermal_zone0/temp|cut -c1-2\`)).\$((\`cat /sys/class/thermal/thermal_zone0/temp|cut -c3-5\`))"</span>
+
+<span class="c-comment"># bat (better cat) alias</span>
+<span class="c-key">alias</span> <span class="c-val">bat</span>=<span class="c-str">"batcat"</span>
+
+<span class="c-comment"># Show system info on shell start</span>
+<span class="c-cmd">fastfetch</span>
+
+<span class="c-comment"># Initialise Starship prompt</span>
+<span class="c-cmd">eval</span> <span class="c-str">"$(starship init zsh)"</span></code></pre>
+              </div>
+              <div class="callout callout-info">
+                <span class="callout-icon">ℹ️</span>
+                <span>The <code style="font-family:var(--font-mono);font-size:13px">eval "$(starship init zsh)"</code> line must be the last entry in your <code style="font-family:var(--font-mono);font-size:13px">.zshrc</code> to ensure it wraps the final prompt correctly.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-connector"><div class="step-connector-line"></div></div>
+
+          <!-- Step 5 -->
+          <div class="step">
+            <div class="step-number">5</div>
+            <div class="step-body">
+              <h3>Install <code style="font-family:var(--font-mono);font-size:15px">starship.toml</code></h3>
+              <p>Copies the configuration file from this repository to <code style="font-family:var(--font-mono);font-size:13px">~/.config/starship.toml</code> where Starship reads it automatically.</p>
+              <div class="code-block">
+                <div class="code-header">
+                  <span class="code-lang">bash</span>
+                  <button class="copy-btn" onclick="copyCode(this)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                    Copy
+                  </button>
+                </div>
+                <pre><code><span class="c-cmd">mkdir</span> <span class="c-flag">-p</span> ~/.config
+<span class="c-cmd">cp</span> starship.toml ~/.config/starship.toml</code></pre>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- One-shot command -->
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash — run everything at once</span>
+            <button class="copy-btn" onclick="copyCode(this)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <pre><code><span class="c-cmd">sudo bash</span> setup.sh</code></pre>
+        </div>
+
+        <div class="callout callout-warning" style="margin-top:var(--space-4)">
+          <span class="callout-icon">⚠️</span>
+          <span>After the script finishes, open a new terminal (or run <code style="font-family:var(--font-mono);font-size:13px">exec zsh</code>) to activate the new prompt.</span>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- CONFIG -->
+      <section id="config">
+        <p class="section-label">Configuration</p>
+        <h2 class="section-title">starship.toml</h2>
+        <p class="section-desc">
+          Drop this file at <code style="font-family:var(--font-mono);font-size:14px;color:var(--accent-primary)">~/.config/starship.toml</code>.
+          Every module is opt-in — comment out anything you don't need.
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">toml</span>
+            <button class="copy-btn" onclick="copyCode(this)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <pre><code><span class="c-comment"># Prompt layout: all modules → custom → newline → character</span>
+<span class="c-key">format</span> = <span class="c-str">"$all$custom$line_break$character"</span>
+
+<span class="c-comment"># ── Local IP ─────────────────────────────────────</span>
+[<span class="c-val">localip</span>]
+<span class="c-key">ssh_only</span> = <span class="c-str">false</span>
+<span class="c-key">format</span>   = <span class="c-str">'@[$localipv4](bold red) '</span>
+<span class="c-key">disabled</span> = <span class="c-str">false</span>
+
+<span class="c-comment"># ── Directory ────────────────────────────────────</span>
+[<span class="c-val">directory</span>]
+<span class="c-key">truncation_length</span> = <span class="c-str">8</span>
+<span class="c-key">truncation_symbol</span> = <span class="c-str">'…/'</span>
+
+<span class="c-comment"># ── Memory usage ─────────────────────────────────</span>
+[<span class="c-val">memory_usage</span>]
+<span class="c-key">disabled</span>  = <span class="c-str">false</span>
+<span class="c-key">threshold</span> = <span class="c-str">-1</span>
+<span class="c-key">symbol</span>    = <span class="c-str">' '</span>
+<span class="c-key">style</span>     = <span class="c-str">'bold dimmed green'</span>
+
+<span class="c-comment"># ── Git status ───────────────────────────────────</span>
+[<span class="c-val">git_status</span>]
+<span class="c-key">conflicted</span> = <span class="c-str">'🏳'</span>
+<span class="c-key">ahead</span>      = <span class="c-str">'🏎💨'</span>
+<span class="c-key">behind</span>     = <span class="c-str">'😰'</span>
+<span class="c-key">diverged</span>   = <span class="c-str">'😵'</span>
+<span class="c-key">up_to_date</span> = <span class="c-str">'✓'</span>
+<span class="c-key">untracked</span>  = <span class="c-str">'🤷'</span>
+<span class="c-key">stashed</span>    = <span class="c-str">'📦'</span>
+<span class="c-key">modified</span>   = <span class="c-str">'📝'</span>
+<span class="c-key">staged</span>     = <span class="c-str">'[++\($count\)](green)'</span>
+<span class="c-key">renamed</span>    = <span class="c-str">'👅'</span>
+<span class="c-key">deleted</span>    = <span class="c-str">'🗑'</span>
+
+<span class="c-comment"># ── Custom: uptime ───────────────────────────────</span>
+[<span class="c-val">custom.uptime</span>]
+<span class="c-key">command</span> = <span class="c-str">"uptime -p | sed 's/up //' | sed 's/ days\\?,/d/' | sed 's/ hours\\?,/h/' | sed 's/ minutes\\?/m/'"</span>
+<span class="c-key">when</span>    = <span class="c-str">true</span>
+<span class="c-key">symbol</span>  = <span class="c-str">"up "</span>
+<span class="c-key">style</span>   = <span class="c-str">"bold yellow"</span>
+<span class="c-key">format</span>  = <span class="c-str">"[$symbol$output]($style) "</span>
+
+<span class="c-comment"># ── Custom: CPU temperature (Raspberry Pi — vcgencmd) ───</span>
+[<span class="c-val">custom.temp</span>]
+<span class="c-key">command</span> = <span class="c-str">"vcgencmd measure_temp | sed \"s/temp=//;s/'C//\""</span>
+<span class="c-key">when</span>    = <span class="c-str">"command -v vcgencmd > /dev/null 2>&amp;1"</span>
+<span class="c-key">symbol</span>  = <span class="c-str">"T:"</span>
+<span class="c-key">style</span>   = <span class="c-str">"bold red"</span>
+<span class="c-key">format</span>  = <span class="c-str">"[$symbol${output}°C]($style) "</span>
+
+<span class="c-comment"># ── Custom: CPU temperature (RISC-V 64 / generic Linux — sysfs) ─</span>
+<span class="c-comment"># Auto-hides on Raspberry Pi (where vcgencmd takes precedence)</span>
+<span class="c-comment"># To find the right zone: for z in /sys/class/thermal/thermal_zone*/temp; do echo "$z: $(cat $z)"; done</span>
+[<span class="c-val">custom.temp_riscv</span>]
+<span class="c-key">command</span> = <span class="c-str">"awk '{printf \"%.0f\", $1/1000}' /sys/class/thermal/thermal_zone0/temp"</span>
+<span class="c-key">when</span>    = <span class="c-str">"test -f /sys/class/thermal/thermal_zone0/temp &amp;&amp; ! command -v vcgencmd > /dev/null 2>&amp;1"</span>
+<span class="c-key">symbol</span>  = <span class="c-str">"T:"</span>
+<span class="c-key">style</span>   = <span class="c-str">"bold red"</span>
+<span class="c-key">format</span>  = <span class="c-str">"[$symbol${output}°C]($style) "</span></code></pre>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- MODULES -->
+      <section id="modules">
+        <p class="section-label">Prompt Modules</p>
+        <h2 class="section-title">What's in your prompt</h2>
+        <p class="section-desc">Each module is independently configurable. Disable any you don't need.</p>
+
+        <div class="modules-grid">
+          <div class="module-card">
+            <div class="module-icon">🌐</div>
+            <div class="module-name">Local IP</div>
+            <div class="module-desc">Shows your machine's IPv4 address — always visible, not just in SSH sessions.</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">📁</div>
+            <div class="module-name">Directory</div>
+            <div class="module-desc">Truncates deep paths to 8 levels with an <code style="font-family:var(--font-mono);font-size:12px">…/</code> prefix so you always know where you are.</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">🧠</div>
+            <div class="module-name">Memory Usage</div>
+            <div class="module-desc">Displays RAM usage in bold green. Threshold set to <code style="font-family:var(--font-mono);font-size:12px">-1</code> so it's always shown.</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">🔀</div>
+            <div class="module-name">Git Status</div>
+            <div class="module-desc">Rich emoji indicators for every git state — ahead, behind, stashed, modified, staged, renamed, and more.</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">⏱</div>
+            <div class="module-name">Uptime</div>
+            <div class="module-desc">Custom module showing system uptime in a compact format like <code style="font-family:var(--font-mono);font-size:12px">up 2d 4h 30m</code>.</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">🌡</div>
+            <div class="module-name">CPU Temperature</div>
+            <div class="module-desc">Uses <code style="font-family:var(--font-mono);font-size:12px">vcgencmd</code> on Raspberry Pi or the Linux sysfs interface on RISC-V 64 and other boards. Each module auto-hides when its method is unavailable.</div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ══════════════════ FOOTER ══════════════════ -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>Starship Setup Guide · Raspberry Pi, RISC-V 64 &amp; Debian/Ubuntu</p>
+      <div class="footer-links">
+        <a href="https://starship.rs" target="_blank" rel="noopener">starship.rs</a>
+        <a href="https://github.com/starship/starship" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      const text = pre.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.classList.add('copied');
+        btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied`;
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy`;
+        }, 2000);
+      });
+    }
+  </script>
+
+</body>
+</html>
