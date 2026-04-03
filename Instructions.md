@@ -78,5 +78,12 @@ symbol = "T:"
 style = "bold red"
 format = "[$symbol${output}°C]($style) "
 
+[custom.containers]
+command = "docker ps -q 2>/dev/null | wc -l | tr -d ' '"
+when = "docker ps -q 2>/dev/null | grep -q ."
+symbol = "🐋 "
+style = "bold blue"
+format = "[$symbol$output]($style) "
+
 
 

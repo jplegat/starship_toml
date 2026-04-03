@@ -844,7 +844,16 @@
 <span class="c-key">when</span>    = <span class="c-str">"test -f /sys/class/thermal/thermal_zone0/temp &amp;&amp; ! command -v vcgencmd > /dev/null 2>&amp;1"</span>
 <span class="c-key">symbol</span>  = <span class="c-str">"T:"</span>
 <span class="c-key">style</span>   = <span class="c-str">"bold red"</span>
-<span class="c-key">format</span>  = <span class="c-str">"[$symbol${output}°C]($style) "</span></code></pre>
+<span class="c-key">format</span>  = <span class="c-str">"[$symbol${output}°C]($style) "</span>
+
+<span class="c-comment"># ── Custom: Docker containers ─────────────────────</span>
+<span class="c-comment"># Shows running container count; hidden when no containers are running</span>
+[<span class="c-val">custom.containers</span>]
+<span class="c-key">command</span> = <span class="c-str">"docker ps -q 2>/dev/null | wc -l | tr -d ' '"</span>
+<span class="c-key">when</span>    = <span class="c-str">"docker ps -q 2>/dev/null | grep -q ."</span>
+<span class="c-key">symbol</span>  = <span class="c-str">"🐋 "</span>
+<span class="c-key">style</span>   = <span class="c-str">"bold blue"</span>
+<span class="c-key">format</span>  = <span class="c-str">"[$symbol$output]($style) "</span></code></pre>
         </div>
       </section>
 
@@ -886,6 +895,11 @@
             <div class="module-icon">🌡</div>
             <div class="module-name">CPU Temperature</div>
             <div class="module-desc">Uses <code style="font-family:var(--font-mono);font-size:12px">vcgencmd</code> on Raspberry Pi or the Linux sysfs interface on RISC-V 64 and other boards. Each module auto-hides when its method is unavailable.</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">🐋</div>
+            <div class="module-name">Docker Containers</div>
+            <div class="module-desc">Shows the number of running Docker containers. Auto-hides when no containers are active.</div>
           </div>
         </div>
       </section>
