@@ -78,6 +78,14 @@ symbol = "T:"
 style = "bold red"
 format = "[$symbol${output}°C]($style) "
 
+# NVMe SSD temperature (reads from sysfs hwmon, no root needed; auto-hides when no NVMe drive)
+[custom.temp_nvme]
+command = "for h in /sys/class/hwmon/hwmon*; do [ \"$(cat $h/name 2>/dev/null)\" = nvme ] && awk '{printf \"%.0f\", $1/1000}' \"$h/temp1_input\" && break; done"
+when = "grep -ql nvme /sys/class/hwmon/hwmon*/name 2>/dev/null"
+symbol = "NVMe "
+style = "bold magenta"
+format = "[$symbol${output}°C]($style) "
+
 [custom.containers]
 command = "docker ps -q 2>/dev/null | wc -l | tr -d ' '"
 when = "docker ps -q 2>/dev/null | grep -q ."

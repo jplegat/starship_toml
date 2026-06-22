@@ -603,6 +603,7 @@
       <span class="feature-pill"><span class="dot"></span>Rich git status</span>
       <span class="feature-pill"><span class="dot"></span>System uptime</span>
       <span class="feature-pill"><span class="dot"></span>CPU temperature</span>
+      <span class="feature-pill"><span class="dot"></span>NVMe temperature</span>
       <span class="feature-pill"><span class="dot"></span>Automatic dark theme</span>
     </div>
   </div>
@@ -846,6 +847,15 @@
 <span class="c-key">style</span>   = <span class="c-str">"bold red"</span>
 <span class="c-key">format</span>  = <span class="c-str">"[$symbol${output}°C]($style) "</span>
 
+<span class="c-comment"># ── Custom: NVMe SSD temperature (sysfs hwmon — no root needed) ─</span>
+<span class="c-comment"># Reads the first hwmon device named 'nvme'; auto-hides when no NVMe drive is present</span>
+[<span class="c-val">custom.temp_nvme</span>]
+<span class="c-key">command</span> = <span class="c-str">"for h in /sys/class/hwmon/hwmon*; do [ \"$(cat $h/name 2>/dev/null)\" = nvme ] &amp;&amp; awk '{printf \"%.0f\", $1/1000}' \"$h/temp1_input\" &amp;&amp; break; done"</span>
+<span class="c-key">when</span>    = <span class="c-str">"grep -ql nvme /sys/class/hwmon/hwmon*/name 2>/dev/null"</span>
+<span class="c-key">symbol</span>  = <span class="c-str">"NVMe "</span>
+<span class="c-key">style</span>   = <span class="c-str">"bold magenta"</span>
+<span class="c-key">format</span>  = <span class="c-str">"[$symbol${output}°C]($style) "</span>
+
 <span class="c-comment"># ── Custom: Docker containers ─────────────────────</span>
 <span class="c-comment"># Shows running container count; hidden when no containers are running</span>
 [<span class="c-val">custom.containers</span>]
@@ -895,6 +905,11 @@
             <div class="module-icon">🌡</div>
             <div class="module-name">CPU Temperature</div>
             <div class="module-desc">Uses <code style="font-family:var(--font-mono);font-size:12px">vcgencmd</code> on Raspberry Pi or the Linux sysfs interface on RISC-V 64 and other boards. Each module auto-hides when its method is unavailable.</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">💾</div>
+            <div class="module-name">NVMe Temperature</div>
+            <div class="module-desc">Shows the NVMe SSD's composite temperature, read from the kernel <code style="font-family:var(--font-mono);font-size:12px">hwmon</code> sysfs interface — no root required. Auto-hides on machines without an NVMe drive.</div>
           </div>
           <div class="module-card">
             <div class="module-icon">🐋</div>
